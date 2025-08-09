@@ -1,0 +1,54 @@
+generator client { provider = "prisma-client-js" }
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String
+  slug  String @unique
+  plans Plan[]
+}
+
+model Plan {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  price     Int
+  beds      Int
+  baths     Int
+  areaSqm   Int
+  floors    Int
+  coverImage String
+  gallery    Json
+  description String?
+  specs       Json?
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  leads     Lead[]
+}
+
+model Lead {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  email     String?
+  message   String?
+  plan      Plan?    @relation(fields: [planId], references: [id])
+  planId    Int?
+  createdAt DateTime @default(now())
+}
+
+model Banner {
+  id        Int      @id @default(autoincrement())
+  title     String
+  subtitle  String?
+  imageUrl  String
+  buttonText String?
+  buttonLink String?
+  createdAt DateTime @default(now())
+}
